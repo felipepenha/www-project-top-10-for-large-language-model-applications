@@ -1,9 +1,18 @@
 # LLM Mock API Template
 
 ## Overview
-This repository provides a template for creating mock API servers to test LLM applications locally. It includes a FastAPI-based mock server with modular service implementations, automated testing, client scripts, and container orchestration using **Podman**.
+This repository provides a robust **template for creating local LLM sandboxes**. It is designed for Red Teaming, by allowing you to mimic production environments without external dependencies or API costs.
 
-The template currently includes a mock OpenAI API endpoint that uses a local Ollama instance as the backend, allowing you to test LLM integrations without incurring API costs.
+## Using as a Sandbox Template
+This project serves as a "Local OpenAI API Mirror". It tricks applications into believing they are communicating with the real OpenAI API, while actually routing requests to a local LLM backend (defaulting to Ollama).
+
+**Why use this for Red Teaming?**
+- **Controlled Environment**: Test attacks and defenses in a safe, isolated container.
+- **No Cost**: Run extensive fuzzing or automated scans without burning API credits.
+- **Offline Capable**: Work in air-gapped or restricted network environments.
+- **Model Agnostic**: Swap between different model families (Llama, Mistral, Gemma, etc.) to test model-specific vulnerabilities.
+
+The template includes a FastAPI-based mock server, modular service implementations, automated testing, client scripts, and container orchestration using **Podman**.
 
 ## Architecture
 
@@ -101,6 +110,19 @@ graph LR
    ollama serve
    ```
    - **Note**: The containerized app accesses Ollama on the host via `host.containers.internal:11434`
+
+## Supported Models
+Because this template uses Ollama as the default backend, you can use **any model supported by Ollama**. This includes a wide range of open-weights models perfect for testing different capabilities and safety filters:
+
+- **Llama 3** (Meta)
+- **Mistral / Mixtral** (Mistral AI)
+- **Gemma** (Google)
+- **Qwen** (Alibaba)
+- **DeepSeek** (DeepSeek)
+- **Phi-3** (Microsoft)
+- **GPT-OSS** (Various community implementations)
+
+To use a different model, simply pull it with `ollama pull <model_name>` and update `config/model.toml`.
 
 ## Configuration
 
@@ -233,16 +255,18 @@ Opens at `http://localhost:7860` with a user-friendly chat UI.
 └── README.md                # This file
 ```
 
-## Adding New Mock Services
+## Adding New Mock Services (Extensibility)
 
-The template is designed to be easily extensible. To add a new mock service (e.g., Pinecone, Anthropic, etc.):
+The template is designed to be easily extensible. While Ollama is the default, you can add support for other backends (like **HuggingFace Transformers**, **vLLM**, or other vector databases) by creating new mock services.
+
+To add a new mock service (e.g., Pinecone, Anthropic, etc.):
 
 1. Create a new module in `app/mocks/` (e.g., `pinecone_mock.py`)
 2. Implement your mock service as a FastAPI router
 3. Export the router in `app/mocks/__init__.py`
 4. Mount it in `app/main.py`
 
-See [app/mocks/README.md](app/mocks/README.md) for detailed instructions and examples.
+👉 **[See app/mocks/README.md](app/mocks/README.md) for detailed step-by-step instructions and code examples.**
 
 ## Development Workflow
 
