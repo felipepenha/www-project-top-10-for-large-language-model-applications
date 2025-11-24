@@ -5,11 +5,16 @@ against the mock API, providing detailed results and statistics.
 """
 
 import os
+import warnings
 from pathlib import Path
 from typing import Any, Dict, List
 
 import tomli
-from mirascope.v0.openai import OpenAICall, OpenAICallParams
+from mirascope.core import prompt_template
+from mirascope.core.openai import openai_call
+
+# Suppress pydub SyntaxWarnings
+warnings.filterwarnings("ignore", category=SyntaxWarning, module="pydub")
 
 # Load model configuration
 config_path = Path(__file__).parent.parent / "config" / "model.toml"
@@ -25,19 +30,11 @@ os.environ["OPENAI_API_KEY"] = "sk-mock-key"
 os.environ["OPENAI_BASE_URL"] = "http://localhost:8000/v1"
 
 
-class LLMClientCall(OpenAICall):
-    """Mirascope OpenAI call wrapper for testing the mock API.
-
-    Attributes:
-        prompt_template: Template string for the prompt.
-        user_message: The actual user message to send.
-        call_params: OpenAI call parameters including model selection.
-    """
-
-    prompt_template = "{user_message}"
-    user_message: str
-
-    call_params = OpenAICallParams(model=config["default"]["model"])
+@openai_call(model=config["default"]["model"])
+@prompt_template("{user_message}")
+def llm_client_call(user_message: str):
+    """Mirascope OpenAI call wrapper for testing the mock API."""
+    ...
 
 
 def test_prompt(prompt: str, category: str = "test") -> Dict[str, Any]:
@@ -59,8 +56,7 @@ def test_prompt(prompt: str, category: str = "test") -> Dict[str, Any]:
             - error (str | None): Error message if failed
     """
     try:
-        call = LLMClientCall(user_message=prompt)
-        response = call.call()
+        response = llm_client_call(user_message=prompt)
         return {
             "category": category,
             "prompt": prompt,
