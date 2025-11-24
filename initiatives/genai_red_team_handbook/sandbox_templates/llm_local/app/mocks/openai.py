@@ -12,7 +12,7 @@ from openai import OpenAI
 from pydantic import BaseModel
 
 # Configure Ollama as the backend
-os.environ["OPENAI_API_KEY"] = "ollama"
+os.environ["OPENAI_API_KEY"] = "foo"
 os.environ["OPENAI_BASE_URL"] = os.getenv(
     "OLLAMA_BASE_URL", "http://host.containers.internal:11434/v1"
 )
