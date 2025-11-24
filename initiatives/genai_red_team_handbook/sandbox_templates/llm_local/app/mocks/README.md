@@ -112,11 +112,10 @@ Add documentation to this README:
 
 ## Example Mock Services to Add
 
-- **Pinecone**: Mock vector database operations
 - **Anthropic**: Mock Claude API
 - **Cohere**: Mock Cohere API
 - **Hugging Face**: Mock inference endpoints
-- **ChromaDB**: Mock vector database
+- **Pinecone**: Mock vector database operations
 - **Weaviate**: Mock vector database
 
 ## Testing Your Mock
