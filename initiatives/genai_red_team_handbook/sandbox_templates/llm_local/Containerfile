@@ -1,0 +1,22 @@
+FROM python:3.10-slim
+
+# Install uv (Python package manager)
+RUN pip install --no-cache-dir uv
+
+# Set working directory
+WORKDIR /app
+
+# Copy project definition files
+COPY pyproject.toml uv.lock ./
+
+# Install dependencies via uv
+RUN uv sync --frozen
+
+# Copy source code
+COPY . .
+
+EXPOSE 8000
+
+# Run the FastAPI server with uvicorn
+COPY entrypoint.sh /app/entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]

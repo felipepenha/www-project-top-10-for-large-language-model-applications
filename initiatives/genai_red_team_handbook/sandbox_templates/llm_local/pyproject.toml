@@ -1,0 +1,23 @@
+[project]
+name = "llm-mock-api-template"
+version = "0.1.0"
+description = "Mock API Template for Testing LLM Applications Locally"
+readme = "README.md"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "fastapi[all]",
+    "uvicorn",
+    "requests",
+    "mirascope",
+    "openai",
+    "tenacity",
+    "gradio",
+    "tomli",
+]
+
+[dependency-groups]
+dev = [
+    "black",
+    "isort",
+    "mypy",
+]
