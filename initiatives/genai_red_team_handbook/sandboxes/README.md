@@ -1,4 +1,4 @@
-# GenAI Red Team Sandbox Templates
+# GenAI Red Team Sandboxes
 
 This directory hosts a collection of **sandbox templates** designed to facilitate Generative AI (GenAI) Red Teaming exercises.
 
