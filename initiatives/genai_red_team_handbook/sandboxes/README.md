@@ -15,4 +15,3 @@ The goal of these sandboxes is to provide ready-to-use, isolated environments wh
 ## Usage
 
 Each sandbox directory contains its own `README.md` with specific instructions on how to build, run, and use that particular sandbox. Please refer to the individual sandbox documentation for details.
-∏
