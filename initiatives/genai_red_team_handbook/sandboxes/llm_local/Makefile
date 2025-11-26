@@ -21,7 +21,7 @@ help:
 	@echo "  make format        - Run black and isort formatters"
 	@echo "  make mypy          - Run mypy static type checker"
 	@echo ""
-	@echo "  make ollama-pull   - Pull llama3 model for Ollama"
+	@echo "  make ollama-pull   - Pull gpt-oss:20b model for Ollama"
 	@echo "  make ollama-serve  - Start Ollama server"
 	@echo ""
 	@echo "Environment:"
@@ -65,7 +65,7 @@ clean:
 	@echo "✅ Cleanup complete!"
 
 ollama-pull:
-	ollama pull llama3
+	ollama pull gpt-oss:20b
 
 ollama-serve:
 	@echo "🔍 Checking if Ollama is running..."
