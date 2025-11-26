@@ -34,6 +34,7 @@ app.include_router(pinecone_router, prefix="/pinecone", tags=["Pinecone Mock"])
 app.include_router(s3_router, prefix="/s3", tags=["S3 Mock"])
 
 from app.rag_engine import router as rag_router
+
 app.include_router(rag_router, tags=["RAG Engine"])
 
 

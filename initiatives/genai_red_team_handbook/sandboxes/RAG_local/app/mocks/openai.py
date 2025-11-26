@@ -11,8 +11,6 @@ from fastapi import APIRouter, Depends, Header, HTTPException
 from openai import OpenAI
 from pydantic import BaseModel
 
-
-
 # Configure Ollama as the backend
 os.environ["OPENAI_API_KEY"] = "foo"
 os.environ["OPENAI_BASE_URL"] = os.getenv(
@@ -111,6 +109,7 @@ def chat_completions(
 
 class EmbeddingRequest(BaseModel):
     """Request model for embeddings endpoint."""
+
     input: str | List[str]
     model: str
 
@@ -121,10 +120,7 @@ def create_embeddings(
 ) -> Any:
     """Mock OpenAI embeddings endpoint using Ollama as the backend."""
     try:
-        response = client.embeddings.create(
-            model=request.model,
-            input=request.input
-        )
+        response = client.embeddings.create(model=request.model, input=request.input)
         return response
     except Exception as e:
         print(f"ERROR: {e}")

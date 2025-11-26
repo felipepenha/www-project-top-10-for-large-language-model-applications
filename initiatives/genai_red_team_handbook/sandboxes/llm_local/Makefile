@@ -1,4 +1,5 @@
-.PHONY: help install sync lock build up down test test-client ollama-pull ollama-serve gradio format mypy clean
+.PHONY: help install sync lock build up down test test-client ollama-pull \
+	ollama-serve gradio format mypy clean
 
 # Default target
 help:
@@ -8,15 +9,17 @@ help:
 	@echo "  make up            - Run the built container"
 	@echo "  make down          - Stop and remove the container"
 	@echo "  make test          - Test the health endpoint"
-	@echo "  make test-client   - Run automated prompt tests from config/prompts.toml"
+	@echo "  make test-client   - Run automated prompt tests from"
+	@echo "                       config/prompts.toml"
 	@echo "  make clean         - Clean up containers and images"
 	@echo ""
 	@echo "  make install       - Install uv package manager"
 	@echo "  make sync          - Sync/install project dependencies"
 	@echo "  make lock          - Update dependency lock file"
 	@echo ""
-	@echo "  make gradio        - Full setup: sync, lock, clean, build, start server, and launch UI"
-	@echo "                       (requires Ollama to be running first)"
+	@echo "  make gradio        - Full setup: sync, lock, clean, build, start"
+	@echo "                       server, and launch UI (requires Ollama to be"
+	@echo "                       running first)"
 	@echo ""
 	@echo "  make format        - Run black and isort formatters"
 	@echo "  make mypy          - Run mypy static type checker"
@@ -48,7 +51,8 @@ build:
 
 up:
 	@echo "🚀 Starting container..."
-	podman run -d --name app_container -p 8000:8000 -v ./data:/app/data --network sec_test_net app_container_build
+	podman run -d --name app_container -p 8000:8000 -v ./data:/app/data \
+		--network sec_test_net app_container_build
 	@echo "✅ Container started!"
 
 down:
@@ -91,7 +95,8 @@ mypy:
 test: sync lock clean ollama-pull ollama-serve build up
 	@echo "⏳ Waiting for server to start..."
 	@sleep 3
-	@curl -s http://localhost:8000/health | grep ok && echo " ✅ Server is healthy!"
+	@curl -s http://localhost:8000/health | grep ok && \
+		echo " ✅ Server is healthy!"
 
 test-client: sync lock clean ollama-pull ollama-serve build up test
 	podman exec app_container uv run python client/main.py

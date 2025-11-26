@@ -1,4 +1,5 @@
-.PHONY: help install sync lock build up down test test-client ollama-pull ollama-serve gradio format mypy clean
+.PHONY: help install sync lock build up down test test-client ollama-pull \
+	ollama-serve gradio format mypy clean
 
 # Default target
 help:
@@ -8,15 +9,17 @@ help:
 	@echo "  make up            - Run the built container"
 	@echo "  make down          - Stop and remove the container"
 	@echo "  make test          - Test the health endpoint"
-	@echo "  make test-client   - Run automated prompt tests from config/prompts.toml"
+	@echo "  make test-client   - Run automated prompt tests from"
+	@echo "                       config/prompts.toml"
 	@echo "  make clean         - Clean up containers and images"
 	@echo ""
 	@echo "  make install       - Install uv package manager"
 	@echo "  make sync          - Sync/install project dependencies"
 	@echo "  make lock          - Update dependency lock file"
 	@echo ""
-	@echo "  make gradio        - Full setup: sync, lock, clean, build, start server, and launch UI"
-	@echo "                       (requires Ollama to be running first)"
+	@echo "  make gradio        - Full setup: sync, lock, clean, build, start"
+	@echo "                       server, and launch UI (requires Ollama to be"
+	@echo "                       running first)"
 	@echo ""
 	@echo "  make format        - Run black and isort formatters"
 	@echo "  make mypy          - Run mypy static type checker"
@@ -24,7 +27,8 @@ help:
 	@echo "  make ollama-pull   - Pull gpt-oss:20b model for Ollama"
 	@echo "  make ollama-serve  - Start Ollama server"
 	@echo "  make ingest        - Ingest all PDFs from data/documents/"
-	@echo "  make upload PATH=x - Upload a file to data/documents/ (requires PATH argument)"
+	@echo "  make upload PATH=x - Upload a file to data/documents/"
+	@echo "                       (requires PATH argument)"
 	@echo ""
 	@echo "Environment:"
 	@echo "  - Ensure Ollama is running locally (port 11434)"
@@ -50,7 +54,8 @@ build:
 
 up:
 	@echo "🚀 Starting container..."
-	podman run -d --name app_container -p 8000:8000 -v ./data:/app/data --network sec_test_net app_container_build
+	podman run -d --name app_container -p 8000:8000 -v ./data:/app/data \
+		--network sec_test_net app_container_build
 	@echo "✅ Container started!"
 
 down:
@@ -94,10 +99,12 @@ mypy:
 test: sync lock clean ollama-pull ollama-serve build up
 	@echo "⏳ Waiting for server to start..."
 	@sleep 3
-	@curl -s http://localhost:8000/health | grep ok && echo " ✅ Server is healthy!"
+	@curl -s http://localhost:8000/health | grep ok && \
+		echo " ✅ Server is healthy!"
 
 test-client: sync lock clean ollama-pull ollama-serve build up test
-	podman exec -e PYTHONWARNINGS="ignore::SyntaxWarning" app_container uv run python client/main.py
+	podman exec -e PYTHONWARNINGS="ignore::SyntaxWarning" app_container \
+		uv run python client/main.py
 
 gradio: sync lock clean ollama-pull ollama-serve build up test test-client
 	@echo "🧹 Stopping any existing Gradio instance..."
@@ -107,7 +114,9 @@ gradio: sync lock clean ollama-pull ollama-serve build up test test-client
 
 ingest: sync lock clean build up
 	@echo "Processing PDFs in data/documents/..."
-	@podman exec -e OLLAMA_BASE_URL="http://host.containers.internal:11434/v1" app_container bash -c 'for f in data/documents/*.pdf; do \
+	@podman exec \
+		-e OLLAMA_BASE_URL="http://host.containers.internal:11434/v1" \
+		app_container bash -c 'for f in data/documents/*.pdf; do \
 		if [ -f "$$f" ]; then \
 			echo "Ingesting $$f..."; \
 			uv run python ETL/ingest.py "$$f"; \
@@ -118,7 +127,8 @@ ingest: sync lock clean build up
 
 upload:
 	@if [ -z "$(PATH)" ]; then \
-		echo "❌ Error: PATH argument is required. Usage: make upload PATH=path/to/file"; \
+		echo "❌ Error: PATH argument is required."; \
+		echo "Usage: make upload PATH=path/to/file"; \
 		exit 1; \
 	fi
 	@echo "Uploading $(PATH) to S3 mock..."
