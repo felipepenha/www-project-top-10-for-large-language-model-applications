@@ -96,8 +96,15 @@ test: sync lock clean ollama-pull ollama-serve build up
 test-client: sync lock clean ollama-pull ollama-serve build up test
 	podman exec app_container uv run python client/main.py
 
-gradio: sync lock clean ollama-pull ollama-serve build up test test-client
-	@echo "🧹 Stopping any existing Gradio instance..."
-	@-lsof -ti:7860 | xargs kill -9 2>/dev/null || true
+gradio: sync lock clean ollama-pull ollama-serve build up test test-client stop-gradio
 	@echo "🚀 Starting Gradio interface..."
 	@uv run python client/gradio_app.py & sleep 3 && open http://localhost:7860
+
+stop-gradio:
+	@echo "🧹 Stopping any existing Gradio instance..."
+	@-lsof -ti:7860 | xargs kill -9 2>/dev/null || true
+
+run-gradio-headless: sync lock clean ollama-pull ollama-serve build up test test-client stop-gradio
+	@echo "🚀 Starting Gradio interface (headless)..."
+	@uv run python client/gradio_app.py > /dev/null 2>&1 &
+
